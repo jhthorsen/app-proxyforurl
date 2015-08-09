@@ -3,6 +3,7 @@ Revision history for perl distribution App-proxyforurl
 0.02 Not Released
  - Fix link to demo
  - More padding between form fields
+ - Bigger editor
 
 0.01 2015-08-09T18:10:51+0200
  - Add script/proxyforurl

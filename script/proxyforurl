@@ -52,8 +52,8 @@ __DATA__
   <title>PAC file tester</title>
   %= stylesheet "http://yui.yahooapis.com/pure/0.6.0/pure-min.css"
   %= stylesheet begin
-    form { max-width: 600px; margin: 3em auto; }
-    textarea { height: 200px; }
+    form { max-width: 50em; margin: 3em auto; }
+    textarea { height: 18em; }
     .footer { margin-top: 3em; font-size: 0.9em; }
     .footer, .footer a { color: #888; }
   % end
