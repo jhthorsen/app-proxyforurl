@@ -6,7 +6,7 @@ App::proxyforurl - An online proxy PAC file parser
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 DESCRIPTION
 
@@ -55,7 +55,7 @@ this is software, there might be bugs.
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 COPYRIGHT AND LICENSE
 
