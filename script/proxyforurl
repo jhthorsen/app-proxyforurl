@@ -61,12 +61,18 @@ __DATA__
 <body>
 %= form_for '', method => 'post', class => 'pure-form pure-form-stacked', begin
   <h1>Online proxy PAC file tester</h1>
-  <label for="rules">PAC file</label>
-  <textarea id="rules" class="pure-input-1"><%= include 'example_pac' %></textarea>
-  <label for="url">URL</label>
-  %= text_field 'url', 'http://example.com', class => 'pure-input-1', id => 'url', placeholder => 'http://example.com'
-  <label for="host">Host</label>
-  %= text_field 'host', 'example.com', class => 'pure-input-1', id => 'host'
+  <p>
+    <label for="rules">PAC file</label>
+    <textarea id="rules" class="pure-input-1"><%= include 'example_pac' %></textarea>
+  </p>
+  <p>
+    <label for="url">URL</label>
+    %= text_field 'url', 'http://example.com', class => 'pure-input-1', id => 'url', placeholder => 'http://example.com'
+  </p>
+  <p>
+    <label for="host">Host</label>
+    %= text_field 'host', 'example.com', class => 'pure-input-1', id => 'host'
+  </p>
   <p>
     <button class="pure-button pure-button-primary">Find rule</button>
   </p>
