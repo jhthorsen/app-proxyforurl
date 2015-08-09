@@ -2,7 +2,7 @@ package App::proxyforurl;
 
 =head1 NAME
 
-App::proxyforurl - An online PAC file parser
+App::proxyforurl - An online proxy PAC file parser
 
 =head1 VERSION
 
@@ -11,13 +11,23 @@ App::proxyforurl - An online PAC file parser
 =head1 DESCRIPTION
 
 L<App::proxyforurl> is a web application that can be used to test
-C<PAC> files.
+proxy PAC files.
 
 Check out C<https://ssl.thorsen.pm/proxyforurl> for online demo.
 
 =head1 SYNOPSIS
 
   $ proxyforurl --listen http://*:8080;
+
+=head1 SEE ALSO
+
+=over 4
+
+=item * L<http://findproxyforurl.com/>
+
+=item * L<https://github.com/pacparser/pacparser>
+
+=back
 
 =cut
 
