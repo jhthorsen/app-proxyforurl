@@ -10,10 +10,22 @@ App::proxyforurl - An online proxy PAC file parser
 
 =head1 DESCRIPTION
 
-L<App::proxyforurl> is a web application that can be used to test
-proxy PAC files.
+L<App::proxyforurl> is a web application that can be used to test proxy PAC
+files.
 
-Check out C<https://ssl.thorsen.pm/proxyforurl> for online demo.
+The L<server side|Mojolicious> is used to serve the web page, but does also
+provide functionlity for resolving hostnames and checking if an IP is within
+a given net.
+
+=head2 Demo
+
+Check out C<http://home.thorsen.pm/proxyforurl> for a running example.
+
+=head2 Missing features
+
+The client side PAC parser does not fully support C<dateRange()>, C<timeRange()>
+or C<weekdayRange()>. These functions simply return true, no matter what the
+intput is.
 
 =head1 SYNOPSIS
 
@@ -28,6 +40,15 @@ Check out C<https://ssl.thorsen.pm/proxyforurl> for online demo.
 =item * L<https://github.com/pacparser/pacparser>
 
 =back
+
+=head2 DISCLAIMER
+
+The parsing is done using good old C<eval()> on the client side, which means
+that the pasted PAC file could in theory contain code which could steal
+cookies, inject alien JavaScript or do other harmful things.
+
+There is a safety net installed to prevent this from happening, but since
+this is software, there might be bugs.
 
 =cut
 
