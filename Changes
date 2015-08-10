@@ -1,6 +1,6 @@
 Revision history for perl distribution App-proxyforurl
 
-0.03 Not Released
+0.03 2015-08-10T15:47:47+0200
  - Fix isPlainHostName() test
 
 0.02 2015-08-09T18:30:45+0200
