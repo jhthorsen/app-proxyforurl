@@ -171,7 +171,7 @@ catch(e){$('rule').value=e};
   }
 
   proto.isPlainHostName = function(str) {
-    return str.match(/^[^\.]+$/) ? false : true;
+    return str.match(/\./) ? false : true;
   };
 
   proto.localHostOrDomainIs = function(host, str) {
