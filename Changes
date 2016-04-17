@@ -1,5 +1,8 @@
 Revision history for perl distribution App-proxyforurl
 
+0.04 Not Released
+ - Fix dnsDomainIs() test
+
 0.03 2015-08-10T15:47:47+0200
  - Fix isPlainHostName() test
 
