@@ -23,5 +23,5 @@ WriteMakefile(
   'NetAddr::IP' => '4.00'
 }
 ,
-  test => { TESTS => 't/*.t' },
+  test => {TESTS => (-e 'META.yml' ? 't/*.t' : 't/*.t xt/*.t')},
 );
