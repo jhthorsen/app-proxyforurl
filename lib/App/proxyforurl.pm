@@ -1,4 +1,12 @@
 package App::proxyforurl;
+use strict;
+use warnings;
+
+our $VERSION = '0.03';
+
+1;
+
+=encoding utf8
 
 =head1 NAME
 
@@ -50,13 +58,6 @@ cookies, inject alien JavaScript or do other harmful things.
 There is a safety net installed to prevent this from happening, but since
 this is software, there might be bugs.
 
-=cut
-
-use strict;
-use warnings;
-
-our $VERSION = '0.03';
-
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (C) 2014, Jan Henning Thorsen
@@ -69,5 +70,3 @@ the terms of the Artistic License version 2.0.
 Jan Henning Thorsen - C<jhthorsen@cpan.org>
 
 =cut
-
-1;
