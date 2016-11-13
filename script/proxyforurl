@@ -144,7 +144,7 @@ catch(e){$('rule').value=e};
   proto.dateRange = TODO;
 
   proto.dnsDomainIs = function(host, domain) {
-    return host.match(new RegExp(domain, 'i'));
+    return host.match(new RegExp(domain.replace(/\./, '\\.'), 'i'));
   };
 
   proto.dnsDomainLevels = function(host) {
