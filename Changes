@@ -1,6 +1,6 @@
 Revision history for perl distribution App-proxyforurl
 
-0.05 Not Released
+0.05 2016-11-13T18:02:19+0100
  - Fix dnsDomainIs() for domains containing dot "." #1
 
 0.04 2016-04-17T11:34:41+0200

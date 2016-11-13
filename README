@@ -2,7 +2,7 @@ NAME
     App::proxyforurl - An online proxy PAC file parser
 
 VERSION
-    0.04
+    0.05
 
 DESCRIPTION
     App::proxyforurl is a web application that can be used to test proxy PAC
