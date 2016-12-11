@@ -1,5 +1,8 @@
 Revision history for perl distribution App-proxyforurl
 
+0.06 Not Released
+ - Fix dnsDomainIs() should not use a regex matcher #2
+
 0.05 2016-11-13T18:02:19+0100
  - Fix dnsDomainIs() for domains containing dot "." #1
 
