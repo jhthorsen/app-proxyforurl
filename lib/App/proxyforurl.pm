@@ -49,7 +49,7 @@ intput is.
 
 =back
 
-=head2 DISCLAIMER
+=head1 DISCLAIMER
 
 The parsing is done using good old C<eval()> on the client side, which means
 that the pasted PAC file could in theory contain code which could steal
