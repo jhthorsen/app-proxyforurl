@@ -1,10 +1,11 @@
 use Mojo::Base -strict;
 use Test::Mojo;
 use Test::More;
+use Mojo::File qw(path);
 
-plan skip_all => 'script/proxyforurl not found' unless -e 'script/proxyforurl';
-do './script/proxyforurl' or die $@;
-my $t = Test::Mojo->new;
+my $script = path(qw(script proxyforurl))->to_abs;
+plan skip_all => 'script/proxyforurl not found' unless -r $script;
+my $t = Test::Mojo->new($script);
 
 $t->get_ok('/')->status_is(200)->element_exists('a[href="//metacpan.org/pod/App::proxyforurl#DESCRIPTION"]')
   ->element_exists('textarea#rules')->element_exists('input#url')->element_exists('input#host')

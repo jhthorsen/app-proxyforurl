@@ -4,7 +4,7 @@ use NetAddr::IP ();
 use Socket 'inet_ntoa';
 
 get '/' => 'index';
-get '/pac' => 'pac';
+get '/pac', [format => [qw(js)]], => 'pac';
 
 get '/gethostbyname' => sub {
   my $c = shift;
