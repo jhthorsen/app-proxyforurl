@@ -4,11 +4,11 @@ App::proxyforurl - An online proxy PAC file parser
 
 # VERSION
 
-0.07
+0.08
 
 # DESCRIPTION
 
-[App::proxyforurl](https://metacpan.org/pod/App::proxyforurl) is a web application that can be used to test proxy PAC
+[App::proxyforurl](https://metacpan.org/pod/App%3A%3Aproxyforurl) is a web application that can be used to test proxy PAC
 files.
 
 The [server side](https://metacpan.org/pod/Mojolicious) is used to serve the web page, but does also
