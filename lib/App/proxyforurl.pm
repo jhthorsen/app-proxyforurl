@@ -39,6 +39,12 @@ intput is.
 
   $ proxyforurl --listen http://*:8080;
 
+With optional environment varaibles:
+
+  $ PROXYFORURL_TEMPLATES=/path/to/templates \
+    PROXYFORURL_X_REQUEST_BASE="https://thorsen.pm/proxyforurl" \
+    proxyforurl --listen http://*:8080;
+
 =head1 SEE ALSO
 
 =over 4

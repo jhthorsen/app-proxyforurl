@@ -5,7 +5,9 @@ use Mojo::Util  qw(network_contains);
 use NetAddr::IP ();
 use Socket      qw(AF_INET AF_INET6 inet_ntop getaddrinfo unpack_sockaddr_in unpack_sockaddr_in6);
 
-get '/' => 'index';
+get
+  '/' => {layout => 'pac'},
+  'index';
 get '/pac', [format => [qw(js)]], => 'pac';
 
 post '/v1/gethostbyname' => sub ($c) {
@@ -40,7 +42,7 @@ post '/v1/is-in-net' => sub ($c) {
   );
 };
 
-get '/v1/template' => {layout => undef, template => 'template'};
+get '/v1/template' => {template => 'template'};
 
 helper host_to_ip_p => sub ($c, $host) {
   return Mojo::IOLoop->subprocess->run_p(sub (@) {
@@ -70,11 +72,16 @@ helper host_to_ip_p => sub ($c, $host) {
   );
 };
 
-hook before_dispatch => sub ($c) {
-  return unless my $base = $c->req->headers->header('X-Request-Base');
-  $c->req->url->base(Mojo::URL->new($base));
-};
+if (my $env_base = $ENV{PROXYFORURL_X_REQUEST_BASE}) {
+  $env_base = '' unless $env_base =~ m!^http!;
+  hook before_dispatch => sub ($c) {
+    return unless my $base = $env_base || $c->req->headers->header('X-Request-Base');
+    $c->req->url->base(Mojo::URL->new($base));
+  };
+}
 
+app->renderer->paths([$ENV{PROXYFORURL_TEMPLATES} || 'templates']);
+app->static->paths([$ENV{PROXYFORURL_PUBLIC}      || 'public']);
 app->start;
 
 sub exception_to_text ($err) {
@@ -83,20 +90,26 @@ sub exception_to_text ($err) {
 }
 
 __DATA__
-@@ index.html.ep
+@@ layouts/pac.html.ep
 <!DOCTYPE html>
 <html>
-<head>
-  <title>PAC file tester</title>
-  %= stylesheet '//unpkg.com/purecss@1.0.0/build/pure-min.css'
-  %= stylesheet begin
-    form { max-width: 50em; margin: 3em auto; }
-    textarea { height: 18em; }
-    .footer { margin-top: 3em; font-size: 0.9em; }
-    .footer, .footer a { color: #888; }
-  % end
-</head>
-<body>
+  <head>
+    %= include 'partial/pac/head'
+  </head>
+  <body>
+    %= content
+  </body>
+</html>
+@@ partial/pac/head.html.ep
+<title>Online proxy PAC file tester</title>
+%= stylesheet '//unpkg.com/purecss@1.0.0/build/pure-min.css'
+%= stylesheet begin
+  form { max-width: 50em; margin: 3em auto; }
+  textarea { height: 18em; }
+  .footer { margin-top: 3em; font-size: 0.9em; }
+  .footer, .footer a { color: #888; }
+% end
+@@ index.html.ep
 %= form_for '', method => 'post', id => 'proxy_for_url', class => 'pure-form pure-form-stacked', begin
   <h1>Online proxy PAC file tester</h1>
   <p>
@@ -125,10 +138,14 @@ __DATA__
     Powered by <a href="//metacpan.org/pod/App::proxyforurl#DESCRIPTION">proxyforurl</a>.
   </p>
 % end
-%= javascript '/pac.js'
-</body>
-</html>
-
+%= javascript begin
+%= include 'pac', format => 'js'
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.ProxyForURL) return;
+  window.proxyForURL = new ProxyForURL();
+  window.proxyForURL.attach(document);
+});
+% end
 @@ pac.js.ep
 const PAC_FUNCTIONS = {
   alert: true,
@@ -317,13 +334,6 @@ class ProxyForURL {
     return res;
   }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  if (window.ProxyForURL) return;
-  window.proxyForURL = new ProxyForURL();
-  window.proxyForURL.attach(document);
-});
-
 @@ template.html.ep
 // Your IP: <%= $c->tx->remote_address %>
 function FindProxyForURL(url, host) {

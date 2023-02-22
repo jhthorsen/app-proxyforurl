@@ -4,6 +4,8 @@ Revision history for perl distribution App-proxyforurl
  - Changed GET /gethostbyname to POST /v1/gethostbyname
  - Changed GET /within to POST /v1/is-in-net
  - Rewrote JavaScript
+ - Add support for PROXYFORURL_X_REQUEST_BASE
+ - Add support for PROXYFORURL_TEMPLATES
 
 0.12 2021-12-14T19:16:57+0900
  - Fix correct quotes for pure-min.css
