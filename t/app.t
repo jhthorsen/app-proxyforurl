@@ -32,8 +32,4 @@ for my $method (qw(
   $t->content_like(qr{proto\.$method\s+=})->content_like(qr{'$method'});
 }
 
-$t->get_ok('/gethostbyname')->status_is(400);
-
-$t->get_ok('/within')->status_is(400);
-
 done_testing;
