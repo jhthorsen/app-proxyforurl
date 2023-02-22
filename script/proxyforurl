@@ -97,46 +97,108 @@ __DATA__
     %= include 'partial/pac/head'
   </head>
   <body>
-    %= content
+    <nav>
+      <ul>
+        <li>&nbsp;</li>
+        <li><%= link_to 'ProxyForURL', '/' %></li>
+      </ul>
+      <ul>
+        <li>
+          <label data-tooltip="Switch dark/light mode" data-placement="left">
+            <input type="checkbox" id="theme_switcher" role="switch" aria-label="Switch dark/light mode">
+          </label>
+        </li>
+        <li>&nbsp;</li>
+      </ul>
+    </nav>
+    <div class="container">
+      <article>
+        <header>
+          <h1>Online proxy PAC file tester</h1>
+          <p>Enter the content of your PAC file and test it against a URL.</p>
+        </header>
+        %= content
+        <footer>
+          <a href="https://github.com/jhthorsen/app-proxyforurl">This program</a> is free software,
+          you can redistribute it and/or modify it under the terms of the
+          <a href="https://spdx.org/licenses/Artistic-2.0.html">Artistic License version 2.0</a>.
+        </footer>
+      </article>
+    </div>
+    %= javascript begin
+      const switcher = document.getElementById('theme_switcher');
+      const setTheme = (e) => {
+        const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const other = prefers === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', e.target.checked ? other : prefers);
+      };
+      switcher.addEventListener('click', setTheme);
+      setTheme({target: switcher});
+    % end
   </body>
 </html>
 @@ partial/pac/head.html.ep
 <title>Online proxy PAC file tester</title>
-%= stylesheet '//unpkg.com/purecss@1.0.0/build/pure-min.css'
+%= stylesheet 'https://unpkg.com/@picocss/pico@1.*/css/pico.min.css'
 %= stylesheet begin
-  form { max-width: 50em; margin: 3em auto; }
-  textarea { height: 18em; }
-  .footer { margin-top: 3em; font-size: 0.9em; }
-  .footer, .footer a { color: #888; }
+  body {
+    margin-top: 5rem;
+  }
+  nav {
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: saturate(150%) blur(18px);
+    border-bottom: 1px solid var(--muted-border-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+  }
+  footer {
+    font-size: 14px;
+  }
+  pre {
+    margin-inline: calc(var(--block-spacing-horizontal) * -1);
+    padding: var(--block-spacing-horizontal);
+    line-height: 1.5em;
+  }
+  textarea {
+    height: 18em;
+  }
+  label[data-tooltip] {
+    border: 0;
+  }
 % end
 @@ index.html.ep
-%= form_for '', method => 'post', id => 'proxy_for_url', class => 'pure-form pure-form-stacked', begin
-  <h1>Online proxy PAC file tester</h1>
-  <p>
-    <label for="pac_rules">PAC file</label>
-    <textarea id="pac_rules" name="rules" class="pure-input-1"></textarea>
-  </p>
-  <p>
-    <label for="pac_url">URL</label>
-    %= text_field 'url', 'http://example.com', class => 'pure-input-1', id => 'pac_url', placeholder => 'http://example.com'
-  </p>
-  <p>
-    <label for="pac_my_ip_address">Your IP address</label>
-    %= text_field 'my_ip_address', 'http://example.com', class => 'pure-input-1', id => 'pac_my_ip_address', placeholder => 'http://example.com'
-  </p>
-  <p>
-    <label for="pac_host">Host</label>
-    %= text_field 'host', 'example.com', class => 'pure-input-1', id => 'pac_host'
-  </p>
-  <p>
-    <button class="pure-button pure-button-primary">Find rule</button>
-  </p>
-  <label for="pac_rule_found">Rule</label>
-  <input type="text" id="pac_rule_found" name="rule_found" readonly="readonly" class="pure-input-1">
-  <pre class="pac-log hljs language-javascript"></pre>
-  <p class="footer">
-    Powered by <a href="//metacpan.org/pod/App::proxyforurl#DESCRIPTION">proxyforurl</a>.
-  </p>
+%= form_for '', method => 'post', id => 'proxy_for_url', begin
+  <label for="pac_rules">
+    <span>PAC file</span>
+    <textarea id="pac_rules" name="rules"></textarea>
+  </label>
+  <div class="grid">
+    <label for="pac_url">
+      <span>URL</span>
+      %= text_field 'url', 'http://example.com', id => 'pac_url', placeholder => 'http://example.com'
+    </label>
+    <label for="pac_host">
+      <span>Host</span>
+      %= text_field 'host', '', id => 'pac_host', placeholder => 'From URL'
+    </label>
+    <label for="pac_my_ip_address">
+      <span>Your IP address</span>
+      %= text_field 'my_ip_address', 'http://example.com', id => 'pac_my_ip_address', placeholder => 'http://example.com'
+    </label>
+  </div>
+  <div class="grid">
+    <button>Find rule</button>
+    <div>&nbsp;</div>
+    <div></div>
+  </div>
+  <label for="pac_rule_found">
+    <span>Rule</span>
+    <input type="text" id="pac_rule_found" name="rule_found" readonly="readonly">
+  </label>
+  <pre class="pac-log hljs language-javascript">// Hit "Find rule" and see the log here</pre>
 % end
 %= javascript begin
 %= include 'pac', format => 'js'
@@ -169,9 +231,6 @@ class ProxyForURL {
     if (!this.form) return console.warn('Could not find form#proxy_for_url');
 
     this.logEl = this.form.querySelector('.pac-log')
-    if (!this.form) return console.warn('Could not find form .pac-log');
-    this.logEl.style.display = 'none';
-
     this.myIpAddressInput = this.form.querySelector('[name=my_ip_address]');
     this.ruleFoundInput = this.form.querySelector('[name=rule_found]');
     this.rulesInput = this.form.querySelector('[name=rules]');
@@ -309,10 +368,9 @@ class ProxyForURL {
   }
 
   _animate(start) {
-    const method = start ? 'add' : 'remove';
+    const method = start ? 'setAttribute' : 'removeAttribute';
     setTimeout(() => {
-      this.form.querySelector('button').classList[method]('animation-blink');
-      this.ruleFoundInput.classList[method]('animation-blink');
+      this.form.querySelector('button')[method]('aria-busy', true);
     }, (start ? 1 : 350));
   }
 
