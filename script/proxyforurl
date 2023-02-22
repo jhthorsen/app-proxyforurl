@@ -157,16 +157,20 @@ __DATA__
   footer {
     font-size: 14px;
   }
-  pre {
-    margin-inline: calc(var(--block-spacing-horizontal) * -1);
-    padding: var(--block-spacing-horizontal);
-    line-height: 1.5em;
-  }
   textarea {
     height: 18em;
   }
   label[data-tooltip] {
     border: 0;
+  }
+  #pac_log tbody tr:first-child td {
+    color: var(--code-value-color);
+    font-weight: bold;
+    border-bottom: 4px double var(--code-value-color);
+    vertical-align: top;
+  }
+  #pac_log tbody tr:first-child:last-child td {
+    height: 8rem;
   }
 % end
 @@ index.html.ep
@@ -194,11 +198,21 @@ __DATA__
     <div>&nbsp;</div>
     <div></div>
   </div>
-  <label for="pac_rule_found">
-    <span>Rule</span>
-    <input type="text" id="pac_rule_found" name="rule_found" readonly="readonly">
-  </label>
-  <pre class="pac-log hljs language-javascript">// Hit "Find rule" and see the log here</pre>
+  <table id="pac_log" role="grid">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Rule</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>0</td>
+        <td colspan="2">Hit "Find rule" to see log</td>
+      </tr>
+    </tbody>
+  </table>
 % end
 %= javascript begin
 %= include 'pac', format => 'js'
@@ -230,11 +244,10 @@ class ProxyForURL {
     this.form = d.querySelector('#proxy_for_url');
     if (!this.form) return console.warn('Could not find form#proxy_for_url');
 
-    this.logEl = this.form.querySelector('.pac-log')
+    this.logEl = d.querySelector('table#pac_log, form table');
     this.myIpAddressInput = this.form.querySelector('[name=my_ip_address]');
-    this.ruleFoundInput = this.form.querySelector('[name=rule_found]');
     this.rulesInput = this.form.querySelector('[name=rules]');
-    if (!this.myIpAddressInput || !this.ruleFoundInput || !this.rulesInput) return console.error('Could not find all form fields');
+    if (!this.myIpAddressInput || !this.rulesInput) return console.error('Could not find all form fields');
 
     this.form.addEventListener('submit', (e) => [e.preventDefault(), this.findRule()]);
     this._init();
@@ -248,8 +261,7 @@ class ProxyForURL {
     try {
       const url = new URL(document.querySelector('#pac_url').value);
       this.log(null);
-      this.log('// Looking for rule...');
-      this.log('FindProxyForURL', [url, url.hostname], '...');
+      this.log('FindProxyForURL', [url, url.hostname], null);
 
       this.findProxyForURL = this.rulesInput.value
           .replace(/function\s+FindProxyForURL[^{]+{/, '')
@@ -264,29 +276,39 @@ class ProxyForURL {
 
       const fn = new AsyncFunction('url', 'host', this.findProxyForURL).bind(this);
       fn(url.toString(), url.hostname).then(
-        (rule) => (this.ruleFoundInput.value = rule),
-        (err) => this.ruleFoundInput.value = String(err),
+        (rule) => (this.logEl.querySelector('tbody tr td:last-child').textContent = rule),
+        (err) => this.log(String(err)),
       ).finally(() => this._animate(false));
     } catch (err) {
       this._animate(false);
-      this.ruleFoundInput.value = String(err);
-      if (err.lineNumber) this.ruleFoundInput.value += ' at line ' + err.lineNumber;
-      if (err.columnNumber) this.ruleFoundInput.value += ':' + err.columnNumber;
-      this.logEl.innerHTML = this.findProxyForURL;
+      let message = String(err);
+      if (err.lineNumber) message += ' at line ' + err.lineNumber;
+      if (err.columnNumber) message += ':' + err.columnNumber;
+      this.log(this.findProxyForURL);
+      this.log(message);
       throw err;
     }
   }
 
   log(msg, args, res) {
-    this.logEl.style.display = msg === null ? 'none' : 'block';
-    if (msg === null) return this._log = this.logEl.textContent = '';
-    if (!args) return this.logEl.textContent += msg + '\n';
+    const tbody = this.logEl.querySelector('tbody');
+    if (msg === null) return tbody.innerHTML = '';
+    const cells = [tbody.querySelectorAll('tr').length, msg, JSON.stringify(res)];
 
-    const prefix = PAC_FUNCTIONS[msg] === false ? '// ' : '';
-    args = JSON.stringify(args).replace(/^\[/, '(').replace(/]$/, ')');
-    if (res != '...') res = JSON.stringify(res)
-    this._log += prefix + msg + args + ' = ' + res + ';\n';
-    this.logEl.innerHTML = this._log;
+    if (args) {
+      const prefix = PAC_FUNCTIONS[msg] === false ? '// ' : '';
+      args = JSON.stringify(args).replace(/^\[/, '(').replace(/]$/, ')');
+      cells[1] = prefix + msg + args;
+    }
+
+    const tr = document.createElement('tr');
+    for (const content of cells) {
+      const td = document.createElement('td');
+      td.textContent = content;
+      tr.appendChild(td);
+    }
+
+    tbody.appendChild(tr);
   }
 
   async alert() {
