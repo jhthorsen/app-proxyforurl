@@ -2,7 +2,7 @@ package App::proxyforurl;
 use strict;
 use warnings;
 
-our $VERSION = '0.12';
+our $VERSION = '1.00';
 
 1;
 
