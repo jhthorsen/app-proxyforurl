@@ -281,15 +281,14 @@ class ProxyForURL {
       const fn = new AsyncFunction('url', 'host', this.findProxyForURL).bind(this);
       fn(url.toString(), url.hostname).then(
         (rule) => (this.logEl.querySelector('tbody tr td:last-child').textContent = rule),
-        (err) => this.log(String(err)),
+        (err) => this.log(String(err), '', 'Error!'),
       ).finally(() => this._animate(false));
     } catch (err) {
       this._animate(false);
       let message = String(err);
       if (err.lineNumber) message += ' at line ' + err.lineNumber;
       if (err.columnNumber) message += ':' + err.columnNumber;
-      this.log(this.findProxyForURL);
-      this.log(message);
+      this.log(message, '', 'Error!');
       throw err;
     }
   }
@@ -324,17 +323,7 @@ class ProxyForURL {
   }
 
   async dnsDomainIs(host, domain) {
-    const hostParts = host.split('.');
-    const domainParts = domain.split('.');
-    if (hostParts.length < domainParts.length) return false;
-
-    while (domainParts.length) {
-      const p = domainParts.pop();
-      if (!p.length) continue;
-      if (p != hostParts.pop()) return false;
-    }
-
-    return true;
+    return host.endsWith(domain);
   }
 
   async dnsDomainLevels(host) {
@@ -374,7 +363,7 @@ class ProxyForURL {
   }
 
   async localHostOrDomainIs(host, str) {
-    return str.match(/^\./) ? dnsDomainIs(host, str) : host == str ? true : host == host.split('.')[0];
+    return str.match(/^\./) ? dnsDomainIs(host, str) : host === str ? true : host === host.split('.')[0];
   }
 
   async myIpAddress() {
@@ -426,7 +415,7 @@ function FindProxyForURL(url, host) {
   if (isPlainHostName(host)) return "DIRECT";
   if (localHostOrDomainIs(host, "www.example.com")) return "PROXY local.proxy:8080";
   if (!isResolvable(host)) return "SOCKS4 example.com:1080";
-  if (dnsDomainLevels(host) == 4) return "SOCKS4 example.com:1081";
+  if (dnsDomainLevels(host) === 4) return "SOCKS4 example.com:1081";
 
   alert("Checking other rules...");
   alert(myIpAddress());
@@ -435,7 +424,7 @@ function FindProxyForURL(url, host) {
   // port 8080 on fastproxy.example.com:
   if (isInNet(host, "10.0.0.0", "255.255.248.0")) return "PROXY fastproxy.example.com:8080";
 
-  if (dnsDomainIs(host, "example.com")) return "PROXY proxy2.example.com:8888";
+  if (dnsDomainIs(host, "le.com")) return "PROXY proxy2.example.com:8888";
 
   // All other requests go through port 8080 of proxy.example.com.
   // should that fail to respond, go directly to the WWW:

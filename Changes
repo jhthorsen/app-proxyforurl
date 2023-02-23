@@ -2,6 +2,7 @@ Revision history for perl distribution App-proxyforurl
 
 0.13 Not Released
  - Fix demo link in documentation
+ - Fix dnsDomainIs('microsoft.com', 'ft.com')
  - Add support for PROXYFORURL_BRAND_NAME
  - Add support for PROXYFORURL_BRAND_URL
  - Add support for PROXYFORURL_TEMPLATES
