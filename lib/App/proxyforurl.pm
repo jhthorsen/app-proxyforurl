@@ -22,7 +22,7 @@ L<App::proxyforurl> is a web application that can be used to test proxy PAC
 files.
 
 The L<server side|Mojolicious> is used to serve the web page, but does also
-provide functionlity for resolving hostnames and checking if an IP is within
+provide functionality for resolving hostnames and checking if an IP is within
 a given net.
 
 =head2 Demo
@@ -33,13 +33,13 @@ Check out L<https://thorsen.pm/proxyforurl> for a running example.
 
 The client side PAC parser does not fully support C<dateRange()>, C<timeRange()>
 or C<weekdayRange()>. These functions simply return true, no matter what the
-intput is.
+input is.
 
 =head1 SYNOPSIS
 
   $ proxyforurl --listen http://*:8080;
 
-With optional environment varaibles:
+With optional environment variables:
 
   $ PROXYFORURL_TEMPLATES=/path/to/templates \
     PROXYFORURL_BRAND_NAME=Thorsen \
