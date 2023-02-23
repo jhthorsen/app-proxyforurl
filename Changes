@@ -1,5 +1,8 @@
 Revision history for perl distribution App-proxyforurl
 
+1.01 Not Released
+ - Fix fetching correct URLs with PROXYFORURL_X_REQUEST_BASE
+
 1.00 2023-02-23T14:25:43
  - Fix demo link in documentation
  - Fix dnsDomainIs('microsoft.com', 'ft.com')

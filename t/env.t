@@ -11,7 +11,7 @@ my $script = path(qw(script proxyforurl))->to_abs;
 plan skip_all => 'script/proxyforurl not found' unless -r $script;
 my $t = Test::Mojo->new($script);
 
-$t->get_ok('/')->status_is(200)->element_exists('a[href="/proxyforurl/test"]')
-  ->text_is('a[href="/proxyforurl/test"]', 'My brand');
+$t->get_ok('/')->status_is(200)->element_exists('form[action="/proxyforurl"]')
+  ->element_exists('a[href="/test"]')->text_is('a[href="/test"]', 'My brand');
 
 done_testing;

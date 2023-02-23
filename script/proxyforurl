@@ -8,6 +8,7 @@ use Socket      qw(AF_INET AF_INET6 inet_ntop getaddrinfo unpack_sockaddr_in unp
 get
   '/' => {layout => 'pac'},
   'index';
+
 get '/pac', [format => [qw(js)]], => 'pac';
 
 post '/v1/gethostbyname' => sub ($c) {
@@ -167,7 +168,7 @@ __DATA__
 @@ partial/pac/nav.html.ep
 <ul>
   <li>&nbsp;</li>
-  <li><%= link_to config('brand_name'), config('brand_url') %></li>
+  <li><a href="<%= config 'brand_url' %>"><%= config 'brand_name'  %></a></li>
 </ul>
 <ul>
   <li>
@@ -178,7 +179,7 @@ __DATA__
   <li>&nbsp;</li>
 </ul>
 @@ index.html.ep
-%= form_for '', method => 'post', id => 'proxy_for_url', begin
+%= form_for '/', method => 'post', id => 'proxy_for_url', begin
   <label for="pac_rules">
     <span>PAC file</span>
     <textarea id="pac_rules" name="rules"></textarea>
@@ -248,6 +249,7 @@ class ProxyForURL {
     this.form = d.querySelector('#proxy_for_url');
     if (!this.form) return console.warn('Could not find form#proxy_for_url');
 
+    this.basePath = (this.form.action || '/').replace(/\/+$/, '')
     this.logEl = d.querySelector('table#pac_log, form table');
     this.myIpAddressInput = this.form.querySelector('[name=my_ip_address]');
     this.rulesInput = this.form.querySelector('[name=rules]');
@@ -334,7 +336,7 @@ class ProxyForURL {
   async dnsResolve(host) {
     const body = new FormData();
     body.append('host', host);
-    const res = await fetch('/v1/gethostbyname', {method: 'POST', body});
+    const res = await fetch(this.basePath + '/v1/gethostbyname', {method: 'POST', body});
     const text = await res.text();
     if (res.status >= 500) throw 'dnsResolve() FAIL ' + (text || res.status);
     return text;
@@ -348,7 +350,7 @@ class ProxyForURL {
     body.append('ip', ip);
     body.append('net', net);
     body.append('mask', mask);
-    const res = await fetch('/v1/is-in-net', {method: 'POST', body});
+    const res = await fetch(this.basePath + '/v1/is-in-net', {method: 'POST', body});
     const text = await res.text();
     if (res.status >= 500) throw 'isInNet() FAIL ' + (text || res.status);
     return parseInt(text, 10) ? true : false;
@@ -390,7 +392,7 @@ class ProxyForURL {
   }
 
   async _init() {
-    const res = await fetch('/v1/template');
+    const res = await fetch(this.basePath + '/v1/template');
     const text = await res.text();
 
     if (!this.rulesInput.value) this.rulesInput.value = text;
