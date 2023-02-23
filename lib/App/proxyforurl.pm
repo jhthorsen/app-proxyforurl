@@ -12,10 +12,6 @@ our $VERSION = '1.01';
 
 App::proxyforurl - An online proxy PAC file parser
 
-=head1 VERSION
-
-0.12
-
 =head1 DESCRIPTION
 
 L<App::proxyforurl> is a web application that can be used to test proxy PAC
