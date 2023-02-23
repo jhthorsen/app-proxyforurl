@@ -27,7 +27,7 @@ a given net.
 
 =head2 Demo
 
-Check out L<https://app.thorsen.pm/proxyforurl> for a running example.
+Check out L<https://thorsen.pm/proxyforurl> for a running example.
 
 =head2 Missing features
 

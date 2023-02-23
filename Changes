@@ -1,6 +1,7 @@
 Revision history for perl distribution App-proxyforurl
 
 0.13 Not Released
+ - Fix demo link in documentation
  - Changed GET /gethostbyname to POST /v1/gethostbyname
  - Changed GET /within to POST /v1/is-in-net
  - Changed default style to https://picocss.com
