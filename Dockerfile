@@ -14,6 +14,8 @@ RUN apk add --no-cache curl openssl perl perl-io-socket-ssl perl-net-ssleay wget
  && rm -rf /root/.cpanm /var/cache/apk/*
 
 ENV MOJO_MODE production
+ENV PROXYFORURL_TEMPLATES=/templates
+
 EXPOSE 8080
 
 ENTRYPOINT ["/app-proxyforurl-main/script/proxyforurl", "prefork", "-l", "http://*:8080"]

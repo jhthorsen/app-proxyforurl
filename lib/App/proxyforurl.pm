@@ -42,8 +42,26 @@ intput is.
 With optional environment varaibles:
 
   $ PROXYFORURL_TEMPLATES=/path/to/templates \
+    PROXYFORURL_BRAND_NAME=Thorsen \
+    PROXYFORURL_BRAND_URL=https://thorsen.pm \
     PROXYFORURL_X_REQUEST_BASE="https://thorsen.pm/proxyforurl" \
     proxyforurl --listen http://*:8080;
+
+=over 2
+
+=item * PROXYFORURL_TEMPLATES
+
+Can be set to a custom directory to override templates.
+
+=item * PROXYFORURL_BRAND_NAME, PROXYFORURL_BRAND_URL
+
+Used to change the menu item text and URL.
+
+=item * PROXYFORURL_X_REQUEST_BASE
+
+Can be set to a custom request base, in case the app is not mounted at "/".
+
+=back
 
 =head1 SEE ALSO
 

@@ -82,6 +82,8 @@ if (my $env_base = $ENV{PROXYFORURL_X_REQUEST_BASE}) {
 
 app->renderer->paths([$ENV{PROXYFORURL_TEMPLATES} || 'templates']);
 app->static->paths([$ENV{PROXYFORURL_PUBLIC}      || 'public']);
+app->config(brand_name => $ENV{PROXYFORURL_BRAND_NAME} || 'ProxyForURL');
+app->config(brand_url  => $ENV{PROXYFORURL_BRAND_URL}  || '/');
 app->start;
 
 sub exception_to_text ($err) {
@@ -98,18 +100,7 @@ __DATA__
   </head>
   <body>
     <nav>
-      <ul>
-        <li>&nbsp;</li>
-        <li><%= link_to 'ProxyForURL', '/' %></li>
-      </ul>
-      <ul>
-        <li>
-          <label data-tooltip="Switch dark/light mode" data-placement="left">
-            <input type="checkbox" id="theme_switcher" role="switch" aria-label="Switch dark/light mode">
-          </label>
-        </li>
-        <li>&nbsp;</li>
-      </ul>
+      %= include 'partial/pac/nav'
     </nav>
     <div class="container">
       <article>
@@ -173,6 +164,19 @@ __DATA__
     height: 8rem;
   }
 % end
+@@ partial/pac/nav.html.ep
+<ul>
+  <li>&nbsp;</li>
+  <li><%= link_to config('brand_name'), config('brand_url') %></li>
+</ul>
+<ul>
+  <li>
+    <label data-tooltip="Switch dark/light mode" data-placement="left">
+      <input type="checkbox" id="theme_switcher" role="switch" aria-label="Switch dark/light mode">
+    </label>
+  </li>
+  <li>&nbsp;</li>
+</ul>
 @@ index.html.ep
 %= form_for '', method => 'post', id => 'proxy_for_url', begin
   <label for="pac_rules">
