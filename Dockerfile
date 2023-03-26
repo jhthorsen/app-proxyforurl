@@ -1,7 +1,7 @@
 # jhthorsen/app-proxyforurl
 #
 # BUILD: docker build --no-cache --rm -t jhthorsen/app-proxyforurl .
-# RUN:   docker run -it --rm -p 8080:3000 jhthorsen/app-proxyforurl
+# RUN:   docker run -it --rm -p 8080:8080 jhthorsen/app-proxyforurl
 FROM alpine:3.5
 MAINTAINER jhthorsen@cpan.org
 
